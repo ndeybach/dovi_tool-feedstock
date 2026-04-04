@@ -1,7 +1,7 @@
 context:
   version: "2.3.1"
   libdovi_version: "3.3.2"
-  build_number: 1
+  build_number: 2
 
 recipe:
   name: dovi_tool
@@ -44,8 +44,11 @@ outputs:
         from_package:
           - expat
     tests:
-      - script: dovi_tool --help
-      - script: dovi_tool --version
+      - script:
+          - if: build_platform == target_platform or target_platform == "linux-aarch64" # no emulation for osx-arm64
+            then:
+              - dovi_tool --help
+              - dovi_tool --version
       - package_contents:
           bin:
             - dovi_tool
