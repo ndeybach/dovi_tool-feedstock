@@ -11,9 +11,16 @@ cargo-bundle-licenses \
     --format yaml \
     --output "${SRC_DIR}/THIRDPARTY_libdovi.yml"
 
+target_args=()
+if [[ -n "${CARGO_BUILD_TARGET:-}" ]]; then
+    # cargo-c does not reliably infer the cross target from env alone.
+    target_args+=(--target "${CARGO_BUILD_TARGET}")
+fi
+
 cargo cinstall \
     --locked \
     --release \
+    "${target_args[@]}" \
     --prefix "${PREFIX}" \
     --libdir "${PREFIX}/lib" \
     --includedir "${PREFIX}/include"

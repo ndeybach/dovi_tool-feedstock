@@ -1,7 +1,7 @@
 context:
   version: "2.3.1"
   libdovi_version: "3.3.2"
-  build_number: 1
+  build_number: 2
 
 recipe:
   name: dovi_tool
@@ -38,15 +38,17 @@ outputs:
       host:
         - if: linux
           then:
-            - expat
             - freetype
             - fontconfig
       ignore_run_exports:
         from_package:
           - expat
     tests:
-      - script: dovi_tool --help
-      - script: dovi_tool --version
+      - script:
+          - if: build_platform == target_platform or target_platform == "linux-aarch64" # no emulation for osx-arm64
+            then:
+              - dovi_tool --help
+              - dovi_tool --version
       - package_contents:
           bin:
             - dovi_tool
@@ -67,7 +69,10 @@ outputs:
                 then: Library/lib/dovi*.lib
               - if: win
                 then: Library/lib/dovi.def
-      - script: python check-no-static-libs.py dovi_tool
+      - script:
+          - if: build_platform == target_platform or target_platform == "linux-aarch64"
+            then:
+              - python check-no-static-libs.py dovi_tool
         requirements:
           run:
             - python
@@ -117,7 +122,10 @@ outputs:
       # check no static libs are present
             not_exists:
               - "**/*.a"
-      - script: python check-no-static-libs.py libdovi
+      - script:
+          - if: build_platform == target_platform or target_platform == "linux-aarch64"
+            then:
+              - python check-no-static-libs.py libdovi
         requirements:
           run:
             - python
