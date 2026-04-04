@@ -69,7 +69,10 @@ outputs:
                 then: Library/lib/dovi*.lib
               - if: win
                 then: Library/lib/dovi.def
-      - script: python check-no-static-libs.py dovi_tool
+      - script:
+          - if: build_platform == target_platform or target_platform == "linux-aarch64"
+            then:
+              - python check-no-static-libs.py dovi_tool
         requirements:
           run:
             - python
@@ -119,7 +122,10 @@ outputs:
       # check no static libs are present
             not_exists:
               - "**/*.a"
-      - script: python check-no-static-libs.py libdovi
+      - script:
+          - if: build_platform == target_platform or target_platform == "linux-aarch64"
+            then:
+              - python check-no-static-libs.py libdovi
         requirements:
           run:
             - python
