@@ -47,6 +47,17 @@ outputs:
       - package_contents:
           bin:
             - dovi_tool
+      # check no static libs are present
+          files:
+            not_exists:
+              - "**/*.a"
+      - script: python check-no-static-libs.py dovi_tool
+        requirements:
+          run:
+            - python
+        files:
+          recipe:
+            - check-no-static-libs.py
     about:
       homepage: https://github.com/quietvoid/dovi_tool
       repository: https://github.com/quietvoid/dovi_tool
@@ -78,8 +89,19 @@ outputs:
             - libdovi/rpu_parser.h
           lib:
             - dovi
+      # check no static libs are present
           files:
-            - "**/pkgconfig/dovi.pc"
+            exists:
+              - "**/pkgconfig/dovi.pc"
+            not_exists:
+              - "**/*.a"
+      - script: python check-no-static-libs.py libdovi
+        requirements:
+          run:
+            - python
+        files:
+          recipe:
+            - check-no-static-libs.py
     about:
       homepage: https://github.com/quietvoid/dovi_tool/tree/main/dolby_vision
       repository: https://github.com/quietvoid/dovi_tool

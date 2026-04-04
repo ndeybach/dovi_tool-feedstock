@@ -11,3 +11,5 @@ if errorlevel 1 exit /b 1
 
 cargo cinstall --locked --release --prefix "%LIBRARY_PREFIX%" --libdir "%LIBRARY_LIB%" --includedir "%LIBRARY_INC%"
 if errorlevel 1 exit /b 1
+
+if exist "%LIBRARY_LIB%\dovi.lib" del /F /Q "%LIBRARY_LIB%\dovi.lib"
