@@ -1,7 +1,7 @@
 context:
   version: "2.3.1"
   libdovi_version: "3.3.2"
-  build_number: 2
+  build_number: 3
 
 recipe:
   name: dovi_tool
@@ -104,6 +104,8 @@ outputs:
         - if: unix
           then:
             - pkg-config
+      run_exports:
+        - ${{ pin_subpackage('libdovi', upper_bound='x') }}
     tests:
       - package_contents:
           include:
@@ -132,6 +134,17 @@ outputs:
         files:
           recipe:
             - check-no-static-libs.py
+      # test pkg-config can find the library and print the correct version (run export done ok)
+      - script:
+          - if: unix
+            then:
+              - export PKG_CONFIG_PATH="${PREFIX}/lib/pkgconfig"
+              - pkg-config --exists dovi
+        requirements:
+          run:
+            - if: unix
+              then:
+                - pkg-config
     about:
       homepage: https://github.com/quietvoid/dovi_tool/tree/main/dolby_vision
       repository: https://github.com/quietvoid/dovi_tool
